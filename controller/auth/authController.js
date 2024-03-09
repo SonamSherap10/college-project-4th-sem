@@ -6,13 +6,16 @@ const sendEmail = require("../../services/sendEmail.js");
 
 //create a new user
 exports.createUser = async (req, res) => {
-  const { username, email, Password, phoneNumber, province,city ,zone, profilePicture, role, jobTitle, description, qualification} = req.body;
-
-  if (!username || !email || !Password || !phoneNumber || !province || !city || !zone ) {
+    const { username, email, Password, phoneNumber, province,city ,zone, profilePicture, role, jobTitle, description} = req.body;
+    const file = req.file
+    console.log(req.file)
+   
+ if (!username || !email || !Password || !phoneNumber || !province || !city || !zone ) {
     return res.status(404).json({
-      message: "please provide all data",
+      message: "please provide all data", 
     });
   }
+
   await User.create({ 
     username,
     email,
@@ -25,7 +28,7 @@ exports.createUser = async (req, res) => {
     role,
     jobTitle,
     description,
-    qualification,
+    // qualifications : process.env.BACKEND_URL + filepath,
   });
 res.status(200).json({
   message: "user created successfully",
@@ -53,7 +56,7 @@ exports.loginUser = async(req,res)=>{
   const isMatched = bcyrpt.compareSync(password,userFound[0].password)
   if(isMatched){
       // generate token 
-     const token = jwt.sign({id : userFound[0]._id},process.env.SECRET_KEY,{
+     const token = jwt.sign({id : userFound[0].id},process.env.SECRET_KEY,{
       expiresIn : '30d'
      })
 
