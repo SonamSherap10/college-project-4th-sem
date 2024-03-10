@@ -23,5 +23,6 @@ db.sequelize = sequelize;
 
 //Model Call
 db.User = require('./userModel')(sequelize, Sequelize)
+db.Booking = require('./BookingModel')(sequelize, Sequelize)
 
 module.exports = db

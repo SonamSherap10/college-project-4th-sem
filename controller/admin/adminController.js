@@ -46,3 +46,4 @@ return res.status(200).json({
   message : "Employee has been deleted due to unverification"
 }) 
 }
+

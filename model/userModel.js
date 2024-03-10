@@ -54,6 +54,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: true
     },
+    dailyRate:{
+      type: Sequelize.INTEGER,
+      allowNull: true
+    },
     isVerified:{
       type: Sequelize.BOOLEAN,
       defaultValue: false

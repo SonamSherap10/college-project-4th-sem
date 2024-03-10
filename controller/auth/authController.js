@@ -6,7 +6,7 @@ const sendEmail = require("../../services/sendEmail.js");
 
 //create a new user
 exports.createUser = async (req, res) => {
-    const { username, email, Password, phoneNumber, province,city ,zone, profilePicture, role, jobTitle, description} = req.body;
+    const { username, email, Password, phoneNumber, province,city ,zone, profilePicture, role, jobTitle, description,dailyRate} = req.body;
     const file = req.file
     console.log(req.file)
    
@@ -28,6 +28,7 @@ exports.createUser = async (req, res) => {
     role,
     jobTitle,
     description,
+    dailyRate,
     // qualifications : process.env.BACKEND_URL + filepath,
   });
 res.status(200).json({
