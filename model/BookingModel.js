@@ -41,12 +41,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     isAccepted:{
       type: Sequelize.STRING,
-      enum :["Pending","Accepted","Declined"],
+      enum :["Pending","Accepted","Declined","Concluded"],
       defaultValue : "Pending"
     },
     workStatus:{
       type: Sequelize.STRING,
-      enum :["Pending","InProgress","Completed"],
+      enum :["Pending","InProgress","Completed","Dropped"],
       defaultValue : "Pending"
     },
     wagePerDay:{
@@ -56,9 +56,12 @@ module.exports = (sequelize, Sequelize) => {
         max: 10000
     }
   },
-    paymentStaus:{
+  payment:{
+     type : Sequelize.INTEGER
+  },
+    paymentStatus:{
       type: Sequelize.STRING,
-      enum :["Pending","Completed"],
+      enum :["Pending","Success"],
       defaultValue : "Pending"
     },
     rating:{
@@ -70,6 +73,10 @@ module.exports = (sequelize, Sequelize) => {
     },
     comment:{
       type: Sequelize.STRING
+    },
+    completedIn:{
+      type: Sequelize.DATE,
+      allowNull: true
     }
   });
 

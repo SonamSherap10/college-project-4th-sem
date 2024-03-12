@@ -16,7 +16,7 @@ exports.createUser = async (req, res) => {
     });
   }
 
-  await User.create({ 
+const addUser =  await User.create({ 
     username,
     email,
     password: bcyrpt.hashSync(Password, 10),
@@ -31,6 +31,11 @@ exports.createUser = async (req, res) => {
     dailyRate,
     // qualifications : process.env.BACKEND_URL + filepath,
   });
+
+  if(role == "Client"){
+    addUser.isVerified = true;
+    await addUser.save();
+  }
 res.status(200).json({
   message: "user created successfully",
   data :User
@@ -52,6 +57,12 @@ exports.loginUser = async(req,res)=>{
       return res.status(404).json({
           message : "User with that email is not Registered"
       })
+  }
+  
+  if(userFound[0].isVerified == 0){
+    return res.status(400).json({
+        message:"You aren't verified to login please be paitent"
+    })
   }
   // password check 
   const isMatched = bcyrpt.compareSync(password,userFound[0].password)

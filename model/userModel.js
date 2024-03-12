@@ -18,12 +18,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     role: {
       type: Sequelize.STRING,
-      enum:["Employer","Employee"],
+      enum:["Client","Employee"],
       defaultValue:"Employee"
     },
     jobTitle :{
       type : Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     }
     ,
     phoneNumber: {
@@ -66,6 +66,18 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       enum:["Available","Booked"],
       defaultValue:"Available"
+    },
+    overallRating:{
+      type: Sequelize.INTEGER,
+    defaultValue : 0
+    },
+    rating:{
+    type: Sequelize.INTEGER,
+    defaultValue : 0
+    },
+    completedJobs:{
+     type : Sequelize.INTEGER,
+     defaultValue : 0
     },
     otp:{
       type: Sequelize.INTEGER,

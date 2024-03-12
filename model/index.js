@@ -1,6 +1,8 @@
-const dbConfig = require('./../dbConfig/dbConfig')
+const adminSeeder = require('../adminSeeder');
+const dbConfig = require('./../dbConfig/dbConfig');
+const { User } = require('./userModel');
 
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
@@ -15,14 +17,22 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     },
 });
 
-//custom
+// Custom
 const db = {};
-
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-//Model Call
-db.User = require('./userModel')(sequelize, Sequelize)
-db.Booking = require('./BookingModel')(sequelize, Sequelize)
+// Model Call
+db.User = require('./userModel')(sequelize, Sequelize);
+db.Booking = require('./bookingModel')(sequelize, Sequelize);
 
-module.exports = db
+sequelize.authenticate()
+    .then(() => {
+        console.log('Database connection has been established successfully.');
+        adminSeeder(db.User); // Pass the User model to the adminSeeder function
+    })
+    .catch(error => {
+        console.error('Unable to connect to the database:', error);
+    });
+
+module.exports = db;
