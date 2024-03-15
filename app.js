@@ -12,7 +12,7 @@ const port = process.env.PORT || 9000;
 const authRoute = require("./route/authRoute")
 const adminRoute = require("./route/adminRoute")
 const userRoute = require("./route/userRoute") 
- 
+  
 app.set('view engine', 'ejs')
 app.set('views', 'view')
 

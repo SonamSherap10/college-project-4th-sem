@@ -164,7 +164,7 @@ exports.resetPassword = async (req,res)=>{
         })
     }
 
-    const userExists = await User.findAll({email})
+    const userExists = await User.findAll({where:{email}})
     if(userExists.length == 0){
         return res.status(404).json({
             message : "User email not registered"

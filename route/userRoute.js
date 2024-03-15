@@ -4,21 +4,22 @@ const allowTo = require('../middleware/allowTo');
 const isAuthenticated = require('../middleware/authentication');
 const extractLocationData = require('../middleware/extractLocation');
 const router = require('express').Router();
+const CatchError = require('../services/catchError')
 
 //customer routes
-router.get('/viewProfessionals',isAuthenticated,extractLocationData,allowTo("Client"),viewProfessionals)
-router.post('/bookProfessionals/:id',isAuthenticated,extractLocationData,allowTo("Client"),BookProfessional)
-router.get('/viewRequests',isAuthenticated,allowTo("Client"),viewRequests)
-router.post('/cancelBooking/:id',isAuthenticated,allowTo("Client"),cancelBooking)
-router.get('/viewBookedWorkers',isAuthenticated,allowTo("Client"),viewBookedWorkers)
-router.get('/viewCompletedRequests',isAuthenticated,allowTo("Client"),viewCompletedWorks)
-router.post('/rateWorker/:id',isAuthenticated,allowTo("Client"),rateProfessional)
+router.get('/viewProfessionals',isAuthenticated,extractLocationData,allowTo("Client"),CatchError(viewProfessionals))
+router.post('/bookProfessionals/:id',isAuthenticated,extractLocationData,allowTo("Client"),CatchError(BookProfessional))
+router.get('/viewRequests',isAuthenticated,allowTo("Client"),CatchError(viewRequests))
+router.post('/cancelBooking/:id',isAuthenticated,allowTo("Client"),CatchError(cancelBooking))
+router.get('/viewBookedWorkers',isAuthenticated,allowTo("Client"),CatchError(viewBookedWorkers))
+router.get('/viewCompletedRequests',isAuthenticated,allowTo("Client"),CatchError(viewCompletedWorks))
+router.post('/rateWorker/:id',isAuthenticated,allowTo("Client"),CatchError(rateProfessional))
 
 
 //employee routes
-router.get('/viewBookings',isAuthenticated,allowTo("Employee"),viewBookingRequest)
-router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),viewBookedRequests)
-router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),settleBookingRequest)
-router.post('/requestCompletion/:id',isAuthenticated,allowTo("Employee"),workCompletion)
+router.get('/viewBookings',isAuthenticated,allowTo("Employee"),CatchError(viewBookingRequest))
+router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),CatchError(viewBookedRequests))
+router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),CatchError(settleBookingRequest))
+router.post('/requestCompletion/:id',isAuthenticated,allowTo("Employee"),CatchError(workCompletion))
 
 module.exports = router
