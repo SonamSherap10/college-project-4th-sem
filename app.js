@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 const db = require('./model/index')
 
@@ -27,6 +28,10 @@ app.use("/auth",authRoute)
 app.use("/admin",adminRoute)
 app.use("/user",userRoute)
 app.use("/global",globalRoute)
+
+app.use(cors({
+  origin : "*"
+}))
 
 app.listen(port, ()=>{
   console.log(`Server running on port ${port}`)
