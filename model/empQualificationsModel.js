@@ -3,6 +3,7 @@ module.exports = (sequelize, Sequelize) => {
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      unique: true
     },
     image1: {
       type: Sequelize.STRING,
