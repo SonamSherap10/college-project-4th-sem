@@ -46,10 +46,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: true
     },
-    qualifications:{
-      type: Sequelize.STRING,
-      allowNull: true
-    },
     description :{
       type: Sequelize.STRING,
       allowNull: true

@@ -1,7 +1,43 @@
 const db = require("../../model/index");
 const User = db.User;
+const UserQualifications = db.UserQualifications;
 const Booking = db.Booking;
 const schedule = require("node-schedule");
+
+exports.addQualifications = async(req,res)=>{
+ const userId = req.user[0].id
+ const qualifications = req.files.map(file => {
+  return process.env.BACKEND_URL + file.filename
+})
+if(qualifications.length <1){
+  return res.status(404).json({
+    message: "Please upload more qualifications to your name",
+  });
+}
+ await UserQualifications.create({
+  userId,
+  image1: qualifications[0] || null,
+  image2: qualifications[1] || null,
+  image3: qualifications[2] || null,
+  image4: qualifications[3] || null,
+  image5: qualifications[4] || null,
+  image6: qualifications[5] || null,
+  image7: qualifications[6] || null,
+  image8: qualifications[7] || null,
+  image9: qualifications[8] || null,
+  image10: qualifications[9] || null,
+  image11: qualifications[10] || null,
+  image12: qualifications[11] || null,
+  image13: qualifications[12] || null,
+  image14: qualifications[13] || null,
+  image15: qualifications[14] || null,
+})
+ return res.status(200).json({
+  message: "Qualifications uploaded successfully"
+ })
+}
+
+
 
 exports.viewBookingRequest = async (req, res) => {
   const employeeId = req.user[0].id;

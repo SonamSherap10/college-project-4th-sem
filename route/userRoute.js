@@ -1,13 +1,17 @@
-const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests } = require('../controller/user/employeeController');
-const { viewProfessionals, BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/userController');
+const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications } = require('../controller/user/employeeController');
+const {  BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/userController');
 const allowTo = require('../middleware/allowTo');
 const isAuthenticated = require('../middleware/authentication');
 const extractLocationData = require('../middleware/extractLocation');
 const router = require('express').Router();
 const CatchError = require('../services/catchError')
+const {multer,storage}= require("./../middleware/multerConfig");
+const upload = multer({
+   storage: storage 
+  })
+
 
 //customer routes
-router.get('/viewProfessionals',isAuthenticated,extractLocationData,allowTo("Client"),CatchError(viewProfessionals))
 router.post('/bookProfessionals/:id',isAuthenticated,extractLocationData,allowTo("Client"),CatchError(BookProfessional))
 router.get('/viewRequests',isAuthenticated,allowTo("Client"),CatchError(viewRequests))
 router.post('/cancelBooking/:id',isAuthenticated,allowTo("Client"),CatchError(cancelBooking))
@@ -17,6 +21,7 @@ router.post('/rateWorker/:id',isAuthenticated,allowTo("Client"),CatchError(rateP
 
 
 //employee routes
+router.post('/addQualifications',isAuthenticated,upload.array("Qualifications"),allowTo("Employee"),CatchError(addQualifications))
 router.get('/viewBookings',isAuthenticated,allowTo("Employee"),CatchError(viewBookingRequest))
 router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),CatchError(viewBookedRequests))
 router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),CatchError(settleBookingRequest))
