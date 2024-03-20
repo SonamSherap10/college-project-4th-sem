@@ -1,7 +1,8 @@
-const db = require("../../model/index");
+const db = require("../../../model/index");
 const User = db.User;
 const UserQualifications = db.UserQualifications;
 const Booking = db.Booking;
+const Payment = db.Payment;
 const schedule = require("node-schedule");
 
 exports.addQualifications = async(req,res)=>{
@@ -9,12 +10,13 @@ exports.addQualifications = async(req,res)=>{
  const qualifications = req.files.map(file => {
   return process.env.BACKEND_URL + file.filename
 })
+
 if(qualifications.length <1){
   return res.status(404).json({
     message: "Please upload more qualifications to your name",
   });
 }
- await UserQualifications.create({
+ await UserQualifications.create({ 
   userId,
   image1: qualifications[0] || null,
   image2: qualifications[1] || null,
@@ -51,7 +53,6 @@ exports.viewBookingRequest = async (req, res) => {
         "workStatus",
         "rating",
         "comment",
-        "id",
         "employeeId",
       ],
     },
@@ -68,6 +69,8 @@ exports.viewBookingRequest = async (req, res) => {
 
 exports.settleBookingRequest = async (req, res) => {
   const { id } = req.params;
+  const employeeId = req.user[0].id;
+
   if (!id) {
     return res.status(400).json({
       message: "Please provide booking id",
@@ -80,24 +83,32 @@ exports.settleBookingRequest = async (req, res) => {
       message: "Booking not found",
     });
   }
+
+  if(employeeId != booking.employeeId){
+    return res.status(400).json({
+      message : "You are not allowed to do this"
+    })
+  }
+
   if(booking.isAccepted != "Pending") {
     return res.status(404).json({
       message: "You have already settled this request"
     });
   }
   const startingDate = booking.from;
-  //   console.log(startingDate)
+  // console.log(startingDate)
 
   //   // Current time
   // const currentTime = new Date();
 
   // // Add 1 minute to the current time
-  // const targetTime = new Date(currentTime.getTime() + 1 * 60 * 1000);
+  // const targetTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
 
   // console.log(targetTime ,"dajd");
 
   if (willAccept == "Accept") {
-    await booking.update({ isAccepted: "Accepted" });
+
+   await booking.update({ isAccepted: "Accepted" });
     async function updateStatus() {
       const Employee = await User.findAll({
         where: { id: booking.employeeId },
@@ -144,25 +155,17 @@ exports.viewBookedRequests = async(req,res)=>{
 exports.workCompletion = async (req, res) => {
   const bookingId = req.params.id;
   const { status } = req.body;
-
+  const employeeId = req.user[0].id;
+   
   if (!bookingId) {
     return res.status(404).json({
       message: "Please provide id",
     });
   }
-  
+
+    
   const workFound = await Booking.findByPk(bookingId);
   
-  const currentDate = new Date();
-  const currentTime = new Date(currentDate.getTime());
-  
-  const date1 = new Date(currentTime);
-  const date2 = new Date(workFound.from);
-  const differenceInMilliseconds = date1 - date2;
-
-  const workDays = Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-  const cashMoney = workDays * workFound.wagePerDay;
-
   if (!workFound) {
     return res.status(404).json({
       message: "Work not found",
@@ -174,6 +177,29 @@ exports.workCompletion = async (req, res) => {
       message: "Work is not in progress",
     });
   }
+
+  if(employeeId != workFound.employeeId){
+    return res.status(400).json({
+      message : "You are not allowed to do this"
+    })
+  }
+
+  const currentDate = new Date();
+  const currentTime = new Date(currentDate.getTime());
+  
+  const date1 = new Date(currentTime);
+  const date2 = new Date(workFound.from);
+  const differenceInMilliseconds = date1 - date2;
+
+  let workDays = Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+  if (workDays == 0) {
+    workDays = 1;
+  }
+
+  //add the payment details to paymnet database
+  const cashMoney = workDays * workFound.wagePerDay;
+  const addedCharge = 5/100 * cashMoney;
+  const totalCharge = cashMoney + addedCharge;
 
   if (status != "Done") {
     workFound.isAccepted = "Concluded",
@@ -188,9 +214,27 @@ exports.workCompletion = async (req, res) => {
   workFound.isAccepted = "Concluded";
   workFound.workStatus = "Completed";
   workFound.completedIn = currentTime;
-  workFound.payment = cashMoney;
   await workFound.save();
+
+  //add the payment details to paymnet database
+  const paymentFound = await Payment.findAll({where:{bookingId}})
+
+  if(paymentFound.length == 0 ){
+    const payment = await Payment.create({
+      bookingId: bookingId,
+      payment:cashMoney,
+      addedCharge,
+      totalPayment:totalCharge
+    });
+  
+    if(payment){
+      return res.status(200).json({
+        message: "Work has been completed. Waiting for the client for verification",
+      });
+    }}
+
   return res.status(200).json({
-    message: "Work has been completed. Waiting for the client for verification",
-  });
+      message: "Something went wrong"
+    });
+ 
 };

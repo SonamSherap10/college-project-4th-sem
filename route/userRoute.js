@@ -1,8 +1,9 @@
-const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications } = require('../controller/user/employeeController');
-const {  BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/userController');
+const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications } = require('../controller/user/employee/employeeController');
+const {  BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/client/userController');
 const allowTo = require('../middleware/allowTo');
 const isAuthenticated = require('../middleware/authentication');
 const extractLocationData = require('../middleware/extractLocation');
+const VerifyEmp = require('../middleware/isVerified');
 const router = require('express').Router();
 const CatchError = require('../services/catchError')
 const {multer,storage}= require("./../middleware/multerConfig");
@@ -22,9 +23,9 @@ router.post('/rateWorker/:id',isAuthenticated,allowTo("Client"),CatchError(rateP
 
 //employee routes
 router.post('/addQualifications',isAuthenticated,upload.array("Qualifications"),allowTo("Employee"),CatchError(addQualifications))
-router.get('/viewBookings',isAuthenticated,allowTo("Employee"),CatchError(viewBookingRequest))
-router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),CatchError(viewBookedRequests))
-router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),CatchError(settleBookingRequest))
-router.post('/requestCompletion/:id',isAuthenticated,allowTo("Employee"),CatchError(workCompletion))
+router.get('/viewBookings',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(viewBookingRequest))
+router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(viewBookedRequests))
+router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(settleBookingRequest))
+router.post('/requestCompletion/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(workCompletion))
 
 module.exports = router

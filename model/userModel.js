@@ -17,9 +17,8 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     role: {
-      type: Sequelize.STRING,
-      enum:["Client","Employee"],
-      defaultValue:"Employee"
+      type: Sequelize.ENUM("Client","Employee","Admin"), 
+      defaultValue: "Client"
     },
     jobTitle :{
       type : Sequelize.STRING,
@@ -28,17 +27,18 @@ module.exports = (sequelize, Sequelize) => {
     ,
     phoneNumber: {
       type: Sequelize.INTEGER,
+      unique: true,
       allowNull: true
     },
    province:{
-    type: Sequelize.STRING,
+    type: Sequelize.ENUM("Koshi","Madhes","Bagmati","Gandaki","Lumbini","Karnali","Sudurpashchim"),
     allowNull: false
    },
-    city:{
+    district:{
       type: Sequelize.STRING,
       allowNull: false
     },
-    zone:{
+    city:{
       type: Sequelize.STRING,
       allowNull: false
     }, 
@@ -59,21 +59,8 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: false
     },
     bookingStatus:{
-      type: Sequelize.STRING,
-      enum:["Available","Booked"],
+      type: Sequelize.ENUM("Available","Booked"),
       defaultValue:"Available"
-    },
-    overallRating:{
-      type: Sequelize.INTEGER,
-    defaultValue : 0
-    },
-    rating:{
-    type: Sequelize.INTEGER,
-    defaultValue : 0
-    },
-    completedJobs:{
-     type : Sequelize.INTEGER,
-     defaultValue : 0
     },
     otp:{
       type: Sequelize.INTEGER,

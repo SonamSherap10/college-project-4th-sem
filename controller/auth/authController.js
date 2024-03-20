@@ -6,13 +6,19 @@ const sendEmail = require("../../services/sendEmail.js");
 
 //create a new user
 exports.createUser = async (req, res) => {
-    const { username, email, Password, phoneNumber, province,city ,zone, role, jobTitle, description,dailyRate} = req.body;
+    const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,dailyRate} = req.body;
     const ProfilePicture = req.file
      
- if (!username || !email || !Password || !phoneNumber || !province || !city || !zone ) {
+ if (!username || !email || !Password || !phoneNumber || !province || !district || !city ) {
     return res.status(404).json({
       message: "please provide all required data", 
     });
+  }
+
+  if(role == "Admin"){
+    return res.status(400).json({
+      message:"Cannot register as admin"
+    })
   }
 
 const addUser = await User.create({ 
@@ -21,8 +27,8 @@ const addUser = await User.create({
     password: bcyrpt.hashSync(Password, 10),
     phoneNumber,
     province,
+    district,
     city,
-    zone,
     profilePicture: process.env.BACKEND_URL + ProfilePicture.filename,
     role,
     jobTitle,
@@ -39,6 +45,7 @@ res.status(200).json({
   data :User
 })
 };
+
 
 //login user
 exports.loginUser = async(req,res)=>{
@@ -57,11 +64,6 @@ exports.loginUser = async(req,res)=>{
       })
   }
   
-  if(userFound[0].isVerified == 0){
-    return res.status(400).json({
-        message:"You aren't verified to login please be paitent"
-    })
-  }
   // password check 
   const isMatched = bcyrpt.compareSync(password,userFound[0].password)
   if(isMatched){
@@ -77,7 +79,6 @@ exports.loginUser = async(req,res)=>{
           message : "Invalid Password"
       })
   }
-  
 }
 
 // forgot password

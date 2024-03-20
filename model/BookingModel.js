@@ -25,6 +25,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     province:{
+      type: Sequelize.ENUM("Koshi","Madhes","Bagmati","Gandaki","Lumbini","Karnali","Sudurpashchim"),
+      allowNull: false
+     },
+    district:{
       type: Sequelize.STRING,
       allowNull: false
     },
@@ -32,21 +36,15 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    zone:{
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     address:{
       type: Sequelize.STRING
     },
     isAccepted:{
-      type: Sequelize.STRING,
-      enum :["Pending","Accepted","Declined","Concluded"],
+      type: Sequelize.ENUM("Pending","Accepted","Declined","Concluded"),
       defaultValue : "Pending"
     },
     workStatus:{
-      type: Sequelize.STRING,
-      enum :["Pending","InProgress","Completed","Dropped"],
+      type: Sequelize.ENUM("Pending","InProgress","Completed","Dropped"),
       defaultValue : "Pending"
     },
     wagePerDay:{
@@ -56,14 +54,6 @@ module.exports = (sequelize, Sequelize) => {
         max: 10000
     }
   },
-  payment:{
-     type : Sequelize.INTEGER
-  },
-    paymentStatus:{
-      type: Sequelize.STRING,
-      enum :["Pending","Success"],
-      defaultValue : "Pending"
-    },
     rating:{
       type: Sequelize.INTEGER,
       validate: {

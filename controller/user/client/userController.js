@@ -1,21 +1,27 @@
-const db = require("../../model/index");
+const db = require("../../../model/index");
 const User = db.User;
+const Rating = db.Rating;
 const Booking = db.Booking;
 
 exports.BookProfessional = async (req, res) => {
   const employeeId = req.params.id;
   const customerId = req.user[0].id;
-  const { province, city, zone } = req;
+  const { province, district, city } = req;
   const { jobDescription, From, Till, address, wagePerDay } = req.body;
-   
+  
   const from = `${From}` + `T00:01:00`
   const till = `${Till}` + `T23:59:59`
 
   const isEmpAvilable = await User.findByPk(employeeId);
-   
   if(isEmpAvilable.role != "Employee") {
     return res.status(404).json({
       message: "Employee not found"
+    });
+  }
+
+  if(isEmpAvilable.isVerified === false){
+    return res.status(404).json({
+      message: "Employee not verified"
     });
   }
 
@@ -44,8 +50,8 @@ exports.BookProfessional = async (req, res) => {
     from,
     till,
     province,
+    district,
     city,
-    zone,
     address,
     wagePerDay,
   });
@@ -81,12 +87,19 @@ exports.cancelBooking = async(req,res)=>{
   const booking = await Booking.findByPk(bookingId);
   if(booking.customerId!= customerId){
     return res.status(404).json({
-      message : "Booking not found"
+      message : "You are not authorized to cancel"
     })
   }
+if(booking. isAccepted =="Declined"){
+  return res.status(404).json({
+    message : "You have already declined this request"
+  })
+}
+
   if(req.body.status == 'cancel'){
     await booking.update({
-      isAccepted : "Declined"
+      isAccepted : "Declined",
+      workStatus : "Dropped"
     })
     return res.status(200).json({
       message : "Booking cancelled successfully"
@@ -98,7 +111,6 @@ exports.cancelBooking = async(req,res)=>{
 
 exports.viewBookedWorkers = async(req,res)=>{
   const customerId = req.user[0].id;
-  console.log(customerId)
   const bookings = await Booking.findAll({
     where:{
       customerId,
@@ -121,8 +133,7 @@ exports.viewCompletedWorks = async(req,res)=>{
   const userId = req.user[0].id
   const booking = await Booking.findAll({where:{
   customerId: userId,
-  workStatus : "Completed",
-  paymentStatus :"Pending"
+  workStatus : "Completed"
   },
   attributes: { exclude: ['createdAt','updatedAt','paymentStaus','workStatus','rating','comment','id','customerId'] }})
   
@@ -146,12 +157,6 @@ exports.rateProfessional = async(req,res)=>{
 
   const booking = await Booking.findByPk(bookingId)
 
-  // if(booking.rating != 0){
-  //   return res.status(400).json({
-  //     message:"you have already rated this request"
-  //   })
-  // }
-
   if(!booking){
     return res.status(404).json({
       message : "No Bookings found"
@@ -163,17 +168,13 @@ exports.rateProfessional = async(req,res)=>{
       message : "You cannot perform this action"
     })
   }
-  //payment will be integrated here 
-  // booking.paymentStatus = "Success"
 
-  
   booking.rating = rating,
   booking.comment = comment
   await booking.save() 
  
  // updating the average rating of the employee
-const employee = await User.findAll({where:{id : booking.employeeId}})
-
+const employee = await Rating.findAll({where:{ empId : booking.employeeId}})
  //increment the job done by the employee
  employee[0].completedJobs += 1 
  employee[0].rating = employee[0].rating + rating
@@ -184,3 +185,6 @@ return res.status(200).json({
   message :"Rating added Successfully. Thank you"
 })
 } 
+
+
+

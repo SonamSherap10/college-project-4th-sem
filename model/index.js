@@ -26,6 +26,8 @@ db.sequelize = sequelize;
 db.User = require('./userModel')(sequelize, Sequelize);
 db.Booking = require('./bookingModel')(sequelize, Sequelize);
 db.UserQualifications = require('./empQualificationsModel')(sequelize, Sequelize);
+db.Rating = require('./ratingModel')(sequelize, Sequelize);
+db.Payment = require('./paymentModel')(sequelize, Sequelize);
 
 sequelize.authenticate()
     .then(() => {

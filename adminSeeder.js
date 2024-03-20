@@ -15,8 +15,8 @@ const adminSeeder = async(User) => {
                 role: "Admin",
                 jobTitle: "null",
                 province: "null",
+                district: "null",
                 city: "null",
-                zone: "null",
                 isVerified : true
             });
 

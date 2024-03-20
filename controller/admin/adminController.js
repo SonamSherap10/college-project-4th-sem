@@ -1,5 +1,6 @@
 const db = require("../../model/index")
 const User = db.User
+const Rating = db.Rating;
 
 exports.viewUnverifiedEmployee = async (req,res)=>{
   const allEmployees = await User.findAll({where:{role : 'Employee',isVerified : false},attributes: { exclude: ['password', 'otp','isOtpVerified','updatedAt'] }}) 
@@ -32,10 +33,25 @@ exports.verifyEmployee = async (req,res)=>{
       message : "Employee already verified"
     })
   }
+
+  if(employee.role != "Employee"){
+    return res.status(404).json({
+      message: "User is not a Employee"
+    });
+  }
+
 const verified = req.body.verification
 if (verified === true){
   employee.isVerified = verified
   employee.save()
+
+  await Rating.create({
+    empId : id,
+    overallRating: 0,
+    rating:0 ,
+    completedJobs:0
+  })
+
   return res.status(200).json({
     message :"employee has been verified"
   })
