@@ -98,7 +98,7 @@ exports.viewProfessionalsQualifications = async(req,res)=>{
 
 
 exports.updateProfile = async(req,res)=>{
-const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,dailyRate} = req.body;
+const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,Wage} = req.body;
 const {id} = req.params
 const userId = req.user[0].id;
 if(id!= userId) {
@@ -133,7 +133,7 @@ if (req.file && req.file.filename) {
       role,
       jobTitle,
       description,
-      dailyRate,
+      Wage,
       profilePicture: (req.file && req.file.filename) ? process.env.BACKEND_URL + req.file.filename : oldImage
     },
     {

@@ -6,7 +6,7 @@ const sendEmail = require("../../services/sendEmail.js");
 
 //create a new user
 exports.createUser = async (req, res) => {
-    const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,dailyRate} = req.body;
+    const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,Wage} = req.body;
     const ProfilePicture = req.file
      
  if (!username || !email || !Password || !phoneNumber || !province || !district || !city ) {
@@ -33,7 +33,7 @@ const addUser = await User.create({
     role,
     jobTitle,
     description,
-    dailyRate
+    Wage
   });
 
   if(role == "Client"){
@@ -61,7 +61,7 @@ exports.loginUser = async(req,res)=>{
   if(userFound.length == 0){
       return res.status(404).json({
           message : "User with that email is not Registered"
-      })
+      }) 
   }
   
   // password check 

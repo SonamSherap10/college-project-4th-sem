@@ -50,9 +50,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: true
     },
-    dailyRate:{
+    Wage:{
       type: Sequelize.INTEGER,
-      allowNull: true
+      allowNull: true,
+      validate: {
+        min: 100,
+        max: 900
+    }
     },
     isVerified:{
       type: Sequelize.BOOLEAN,

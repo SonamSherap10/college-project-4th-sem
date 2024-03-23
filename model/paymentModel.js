@@ -19,7 +19,7 @@ module.exports = (sequelize, Sequelize) => {
      type : Sequelize.INTEGER
     },
      paymentStatus:{
-       type: Sequelize.ENUM("Pending","Success"),
+       type: Sequelize.ENUM("Completed" ,"Pending" ,"Refunded", "Expired", "User canceled"),
        defaultValue : "Pending"
      }
   });

@@ -7,10 +7,9 @@ exports.BookProfessional = async (req, res) => {
   const employeeId = req.params.id;
   const customerId = req.user[0].id;
   const { province, district, city } = req;
-  const { jobDescription, From, Till, address, wagePerDay } = req.body;
+  const { jobDescription, WorkDay, address, wagePerDay } = req.body;
   
-  const from = `${From}` + `T00:01:00`
-  const till = `${Till}` + `T23:59:59`
+  const workDay = `${WorkDay}` + `T00:01:00`
 
   const isEmpAvilable = await User.findByPk(employeeId);
   if(isEmpAvilable.role != "Employee") {
@@ -34,7 +33,7 @@ exports.BookProfessional = async (req, res) => {
   const hasBooked = await Booking.findAll({
     where: {
       customerId,
-      employeeId,
+      employeeId
     },
   }); 
   if (hasBooked.length > 0) {
@@ -47,8 +46,7 @@ exports.BookProfessional = async (req, res) => {
     customerId,
     job,
     jobDescription,
-    from,
-    till,
+    workDay,
     province,
     district,
     city,
@@ -166,6 +164,12 @@ exports.rateProfessional = async(req,res)=>{
   if( booking.customerId != userId){
     return res.status(400).json({
       message : "You cannot perform this action"
+    })
+  }
+
+  if(booking.rating != null ){
+    return res.status(400).json({
+      message :"you have already rated this job"
     })
   }
 

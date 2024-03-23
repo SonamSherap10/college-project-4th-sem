@@ -66,7 +66,7 @@ return res.status(200).json({
 
 exports.viewClients = async(req,res)=>{
   const allClients = await User.findAll({where:{role : 'Client',isVerified : true},
-  attributes: { exclude: ['password', 'otp','isOtpVerified','updatedAt','jobTitle','qualifications','description','dailyRate','bookingStatus','overallRating','rating','completedJobs'] }}) 
+  attributes: { exclude: ['password', 'otp','isOtpVerified','updatedAt','jobTitle','qualifications','description','Wage','bookingStatus','overallRating','rating','completedJobs'] }}) 
   if(allClients.length ==0){
     return res.status(404).json({
       message: "No clients found"

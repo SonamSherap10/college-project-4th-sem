@@ -16,11 +16,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    from:{
-      type: Sequelize.DATE,
-      allowNull: false
-    },
-    till:{
+    workDay:{
       type: Sequelize.DATE,
       allowNull: false
     },
@@ -59,7 +55,8 @@ module.exports = (sequelize, Sequelize) => {
       validate: {
         min: 1,
         max: 5
-    }
+    },
+    defaultValue: null
     },
     comment:{
       type: Sequelize.STRING

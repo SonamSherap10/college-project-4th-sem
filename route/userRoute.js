@@ -1,4 +1,4 @@
-const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications } = require('../controller/user/employee/employeeController');
+const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications, deleteQualification, updateQualification } = require('../controller/user/employee/employeeController');
 const {  BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/client/userController');
 const allowTo = require('../middleware/allowTo');
 const isAuthenticated = require('../middleware/authentication');
@@ -23,6 +23,8 @@ router.post('/rateWorker/:id',isAuthenticated,allowTo("Client"),CatchError(rateP
 
 //employee routes
 router.post('/addQualifications',isAuthenticated,upload.array("Qualifications"),allowTo("Employee"),CatchError(addQualifications))
+router.post('/updateQualifications',isAuthenticated,VerifyEmp,upload.single("image"),allowTo("Employee"),CatchError(updateQualification))
+router.post('/deleteQualifications',isAuthenticated,VerifyEmp,allowTo("Employee"),CatchError(deleteQualification))
 router.get('/viewBookings',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(viewBookingRequest))
 router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(viewBookedRequests))
 router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(settleBookingRequest))
