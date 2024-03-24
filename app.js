@@ -29,7 +29,7 @@ app.use("/auth",authRoute)
 app.use("/admin",adminRoute)
 app.use("/user",userRoute)
 app.use("/global",globalRoute)
-app.use("/booking",paymentRoute)
+app.use("/payment",paymentRoute)
 
 app.use(cors({
   origin : "*"

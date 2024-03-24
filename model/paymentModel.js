@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
     unique: true
     },
     pidx:{
-      type: Sequelize.INTEGER
+      type: Sequelize.STRING
      },
     payment:{
       type : Sequelize.INTEGER
@@ -21,6 +21,10 @@ module.exports = (sequelize, Sequelize) => {
      paymentStatus:{
        type: Sequelize.ENUM("Completed" ,"Pending" ,"Refunded", "Expired", "User canceled"),
        defaultValue : "Pending"
+     },
+     paymentMethod :{
+       type: Sequelize.ENUM("Khalti","COD"),
+       defaultValue : "Khalti"
      }
   });
 

@@ -42,9 +42,9 @@ exports.initializePayment = async (req, res) => {
       message: "Payment has already been initiated"
     });
   }
-
+  
   const TotalCharge = paymentDetails[0].totalPayment * 100;
-
+  console.log(bookingId, TotalCharge)
   const data = {
     return_url: "http://localhost:7878/success",
     purchase_order_id: bookingId,
@@ -59,6 +59,36 @@ exports.initializePayment = async (req, res) => {
   }
  })
 
-  console.log(response.data);
+console.log(response.data)
+
+  paymentDetails[0].pidx = response.data.pidx;
+  await paymentDetails[0].save();
+ 
+  return res.status(200).json({
+    message: "Payment initiated successfully",
+    payment_url : response.data.payment_url
+  });
 }
 
+
+
+exports.verifyPayment = async(req,res)=>{
+  const pidx = req.query.pidx
+
+  const response = await axios.post("https://a.khalti.com/api/v2/epayment/lookup/",{pidx},
+  {
+        headers :{
+          'Authorization': 'key ec3c7505a7c84b15a68f21b2f45508b3'
+        }
+  })
+
+  if(response.data.status == "Completed" ){
+    const payment = await Payment.findAll({ where: { pidx}})
+    payment[0].paymentStatus = "Completed";
+    payment[0].paymentMethod = "Khalti";
+    await payment[0].save();
+    return res.status(200).json({
+      message: "Payment verified successfully. Thank you for your time"
+    });
+  }
+}
