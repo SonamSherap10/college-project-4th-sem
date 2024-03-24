@@ -33,7 +33,8 @@ exports.BookProfessional = async (req, res) => {
   const hasBooked = await Booking.findAll({
     where: {
       customerId,
-      employeeId
+      employeeId,
+      isAccepted : "Pending" || "Accepted"
     },
   }); 
   if (hasBooked.length > 0) {
@@ -164,6 +165,12 @@ exports.rateProfessional = async(req,res)=>{
   if( booking.customerId != userId){
     return res.status(400).json({
       message : "You cannot perform this action"
+    })
+  }
+
+  if(booking.workStatus == "Dropped"){
+    return res.status(400).json({
+      message : "You cannot rate dropped work"
     })
   }
 

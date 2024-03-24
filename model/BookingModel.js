@@ -47,7 +47,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       validate: {
         min: 500,
-        max: 10000
+        max: 1000
     }
   },
     rating:{

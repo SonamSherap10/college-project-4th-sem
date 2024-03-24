@@ -59,6 +59,7 @@ exports.updateQualification = async (req, res) => {
   }
 
     const qualification = userQualifications[0];
+
     if (qualification[imgName] === null) {
       qualification[imgName] =process.env.BACKEND_URL + req.file.filename; 
     }
