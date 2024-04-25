@@ -1,47 +1,45 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 
-const db = require('./model/index')
+const db = require("./model/index");
 
-db.sequelize.sync({force: false}) 
+db.sequelize.sync({ force: false });
 
-require('dotenv').config() 
-const port = process.env.PORT || 9000; 
+require("dotenv").config();
+const port = process.env.PORT || 9000;
 
-//adding route files  
-const authRoute = require("./route/authRoute")
-const adminRoute = require("./route/adminRoute") 
-const userRoute = require("./route/userRoute")  
-const globalRoute = require("./route/globalRoute")
-const paymentRoute = require("./route/paymentRoute")
-   
-app.set('view engine', 'ejs')
-app.set('views', 'view') 
+//adding route files
+const authRoute = require("./route/authRoute");
+const adminRoute = require("./route/adminRoute");
+const userRoute = require("./route/userRoute");
+const globalRoute = require("./route/globalRoute");
+const paymentRoute = require("./route/paymentRoute");
 
-app.use(express.static("./uploads"))
+app.set("view engine", "ejs");
+app.set("views", "view");
 
-app.use(express.json()); 
-app.use(express.urlencoded({extended: true}));
+app.use(express.static("./uploads"));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/auth",authRoute)
-app.use("/admin",adminRoute)
-app.use("/user",userRoute)
-app.use("/global",globalRoute)
-app.use("/payment",paymentRoute)
+app.use("/auth", authRoute);
+app.use("/admin", adminRoute);
+app.use("/user", userRoute);
+app.use("/global", globalRoute);
+app.use("/payment", paymentRoute);
 
-app.use(cors({
-  origin : "*"
-}))
-
-app.get("/",(req,res)=>{
-  res.json({
-    message : "Hello World"
+app.use(
+  cors({
+    origin: "*",
   })
-})
+);
 
+app.get("/", (req, res) => {
+  res.render("../view/pages/index.ejs");
+});
 
-app.listen(port, ()=>{
-  console.log(`Server running on port ${port}`)
-})
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
