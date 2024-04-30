@@ -12,7 +12,6 @@ const isAuthenticated = async (req,res,next)=>{
         })
     }
   try {
-    
     const decoded = await promisify(jwt.verify)(token,process.env.SECRET_KEY)
     const doesUserExist =  await User.findAll({where:{id : decoded.id}})
    if(!doesUserExist){

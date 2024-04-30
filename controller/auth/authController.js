@@ -14,13 +14,12 @@ exports.createUser = async (req, res) => {
       message: "please provide all required data", 
     });
   }
-
+ 
   if(role == "Admin"){
     return res.status(400).json({
       message:"Cannot register as admin"
     })
   }
-
 const addUser = await User.create({ 
     username,
     email,
@@ -39,7 +38,7 @@ const addUser = await User.create({
   if(role == "Client"){
     addUser.isVerified = true;
     await addUser.save();
-  }
+  } 
 res.status(200).json({
   message: "user created successfully",
   data :User
@@ -72,7 +71,8 @@ exports.loginUser = async(req,res)=>{
      })
       res.status(200).json({
           message : "User logged in successfully",
-         token : token
+         token : token,
+         role : userFound[0].role
       })
   }else{
       res.status(400).json({
@@ -127,7 +127,7 @@ exports.verifyOtp = async(req,res)=>{
    const userExists = await User.findAll({where:{email : email}})
    if(userExists.length == 0){
     return res.status(404).json({
-        message : "Email is not registered"
+        message : "Email is not registered" 
     })
    }
    if(userExists[0].otp !== otp){

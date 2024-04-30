@@ -15,14 +15,17 @@ const adminRoute = require("./route/adminRoute")
 const userRoute = require("./route/userRoute")  
 const globalRoute = require("./route/globalRoute")
 const paymentRoute = require("./route/paymentRoute")
-   
+
 app.set('view engine', 'ejs')
 app.set('views', 'view') 
 
-app.use(express.static("./uploads"))
 
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
+
+app.use(cors({
+  origin : "*"
+}))
 
 
 app.use("/auth",authRoute)
@@ -31,16 +34,13 @@ app.use("/user",userRoute)
 app.use("/global",globalRoute)
 app.use("/payment",paymentRoute)
 
-app.use(cors({
-  origin : "*"
-}))
-
 app.get("/",(req,res)=>{
   res.json({
     message : "Hello World"
   })
 })
 
+app.use(express.static("./uploads"))
 
 app.listen(port, ()=>{
   console.log(`Server running on port ${port}`)

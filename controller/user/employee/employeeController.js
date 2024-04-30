@@ -109,7 +109,6 @@ exports.deleteQualification = async (req, res) => {
       const oldImage = qualification[imgName];
       const lengthToCut = process.env.BACKEND_URL.length;
       const finalFilePathAfterCut = oldImage.slice(lengthToCut);
-      console.log(finalFilePathAfterCut)
         fs.unlink("./uploads/" + finalFilePathAfterCut, (err) => {
           if (err) {
             console.log("error deleting file", err);
@@ -217,7 +216,6 @@ exports.settleBookingRequest = async (req, res) => {
 
 exports.viewBookedRequests = async (req, res) => {
   const employeeId = req.user[0].id;
-  console.log(employeeId);
   const bookings = await Booking.findAll({
     where: {
       employeeId,

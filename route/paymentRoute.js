@@ -5,6 +5,6 @@ const CatchError = require('../services/catchError')
 const router = require('express').Router();
 
 router.post("/initiatePayment/:id",isAuthenticated,allowTo("Client"),CatchError(initializePayment));
-router.get("/success",allowTo("Client"),CatchError(verifyPayment));
+router.post("/verifyPayment",isAuthenticated,CatchError(verifyPayment));
 
-module.exports = router
+module.exports = router 

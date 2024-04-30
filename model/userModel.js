@@ -8,9 +8,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true
-      } 
     },
     password: {
       type: Sequelize.STRING,
@@ -26,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
     }
     ,
     phoneNumber: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       unique: true,
       allowNull: true
     },
@@ -34,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
     type: Sequelize.ENUM("Koshi","Madhes","Bagmati","Gandaki","Lumbini","Karnali","Sudurpashchim"),
     allowNull: false
    },
-    district:{
+    district:{ 
       type: Sequelize.STRING,
       allowNull: false
     },

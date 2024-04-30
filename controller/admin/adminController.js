@@ -1,6 +1,7 @@
 const db = require("../../model/index")
 const User = db.User
 const Rating = db.Rating;
+const Booking = db.Booking;
 
 exports.viewUnverifiedEmployee = async (req,res)=>{
   const allEmployees = await User.findAll({where:{role : 'Employee',isVerified : false},attributes: { exclude: ['password', 'otp','isOtpVerified','updatedAt'] }}) 
@@ -106,6 +107,37 @@ exports.deleteUser = async(req,res)=>{
   await User.destroy({where :{id:id}})
   return res.status(200).json({
     message : "User has been deleted"
+  })
+}
+
+exports.viewBookings = async(req,res)=>{
+  const allBookings = await Booking.findAll()
+  if(allBookings.length ==0){
+    return res.status(404).json({
+      message: "No bookings found"
+    })
+  }
+  return res.status(200).json({
+   data : allBookings
+  })
+}
+
+exports.deleteBooking = async(req,res)=>{
+  const {id} = req.params
+  if(!id){
+    return res.status(400).json({
+      message : "Please provide booking id"
+    })
+  }
+  const booking = await Booking.findByPk(id)
+  if(!booking){
+    return res.status(404).json({
+      message : "Booking not found"
+    })
+  }
+  await Booking.destroy({where :{id:id}})
+  return res.status(200).json({
+    message : "Booking has been deleted"
   })
 }
 

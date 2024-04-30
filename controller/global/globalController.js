@@ -4,10 +4,46 @@ const bcrypt = require("bcrypt")
 const User = db.User;
 const UserQualification = db.UserQualifications;
 
-exports.viewProfessionals = async (req, res) => {
-  const { jobTitle } = req.body;
-  const { province, district, city } = req;
 
+exports.getAll = async (req, res) => {
+  let searchOptions = {
+    where: { isVerified: true, role:'Employee' },
+    attributes: {
+      exclude: [
+        "password",
+        "role",
+        "isVerified",
+        "otp",
+        "role",
+        "isOtpVerified",
+        "createdAt",
+        "updatedAt",
+      ],
+    },
+  };
+
+  const Employees = await User.findAll(searchOptions);
+
+  // Filter out the user with username "admin"
+  const filteredEmployees = Employees.filter(employee => employee.username !== 'Admin' );
+
+  if (filteredEmployees.length === 0) {
+    return res.status(404).json({
+      message: "No Employees found"
+    });
+  } else {
+    return res.status(200).json({
+      data: filteredEmployees
+    });
+  }
+};
+
+
+
+exports.viewProfessionals = async (req, res) => {
+  const  jobTitle  = req.params.job;
+  const { province, district, city } = req.query;
+  
   let searchOptions = {
     where: { jobTitle, isVerified: true },
     attributes: {

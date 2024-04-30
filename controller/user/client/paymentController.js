@@ -44,7 +44,6 @@ exports.initializePayment = async (req, res) => {
   }
   
   const TotalCharge = paymentDetails[0].totalPayment * 100;
-  console.log(bookingId, TotalCharge)
   const data = {
     return_url: "http://localhost:7878/success",
     purchase_order_id: bookingId,
@@ -59,8 +58,6 @@ exports.initializePayment = async (req, res) => {
   }
  })
 
-console.log(response.data)
-
   paymentDetails[0].pidx = response.data.pidx;
   await paymentDetails[0].save();
  
@@ -73,8 +70,7 @@ console.log(response.data)
 
 
 exports.verifyPayment = async(req,res)=>{
-  const pidx = req.query.pidx
-
+  const pidx = req.body.pidx
   const response = await axios.post("https://a.khalti.com/api/v2/epayment/lookup/",{pidx},
   {
         headers :{
