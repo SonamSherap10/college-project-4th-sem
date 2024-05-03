@@ -17,9 +17,10 @@ const globalRoute = require("./route/globalRoute");
 const paymentRoute = require("./route/paymentRoute");
 
 app.set("view engine", "ejs");
-app.set("views", "view");
+// app.set("views", "view");
 
-app.use(express.static("./uploads"));
+//Node js laii file access garna dine
+app.use(express.static("public/"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,8 +37,16 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.render("../view/pages/index.ejs");
+app.get("/home", (req, res) => {
+  res.render("home.ejs");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+app.get("/services", (req, res) => {
+  res.render("services.ejs");
 });
 
 app.listen(port, () => {

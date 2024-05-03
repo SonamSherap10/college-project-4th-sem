@@ -975,7 +975,7 @@ button, a { transition: var(--transition); }
 
   .hero-banner {
     display: block;
-    background: url("../pages/assets/images/hero-banner.png") no-repeat;
+    background: url("../images/hero-banner.png") no-repeat;
     background-size: cover;
     background-position: left;
     position: absolute;
