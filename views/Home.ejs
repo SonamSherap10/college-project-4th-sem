@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix at your Fingertips</title>
+
+  <!-- 
+    - favicon
+    To be made pending...................
+  -->
+  <!-- <link rel="shortcut icon" href="./favico.svg" type="image/svg+xml"> -->
+  <link rel="stylesheet" type="text/css" href="css/home.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Open+Sans&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <%- include("./components/navbar") %>
+    <main>
+      <article>
+
+        <!-- 
+        - #HERO
+      -->
+
+        <section class="section hero" id="home">
+          <div class="container">
+
+            <div class="hero-content">
+              <h2 class="h1 hero-title">Service at Your Doorsteps.</h2>
+
+              <p class="hero-text">
+                Best household service workers finder in Nepal.
+              </p>
+            </div>
+
+            <div class="hero-banner"></div>
+
+            <form action="" class="hero-form">
+
+              <div class="input-wrapper">
+                <label for="input-1" class="input-label">Service Search:</label>
+
+                <input type="text" name="service-type" id="input-1" class="input-field"
+                  placeholder="Type a service Here.">
+              </div>
+
+              <div class="input-wrapper">
+                <label for="input-2" class="input-label">Location:</label>
+
+                <input type="text" name="location" id="input-2" class="input-field" placeholder="Mention your Location">
+              </div>
+
+              <div class="input-wrapper">
+                <label for="input-3" class="input-label">Experience:</label>
+
+                <input type="text" name="experience" id="input-3" class="input-field"
+                  placeholder="Mention Experience if any?">
+              </div>
+              <button type="submit" class="btn">Search</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ..................Hero section ends Here .................................-->
+
+        <section id="aboutus" class="section aboutus">
+          <div class="container">
+            <h2 class="h2 section-title">About us</h2>
+            <div class="aboutus-card">
+
+              <h3 class="card-title">Fix at Your Fingertips</h3>
+
+              <p class="card-text">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quae amet officiis hic reprehenderit, sequi
+                excepturi iste veritatis beatae itaque consequatur nostrum reiciendis nihil saepe repellendus,
+                necessitatibus vitae voluptates neque a voluptatibus cupiditate vero laborum et. Quidem a dolor magni
+                modi
+                distinctio itaque, repellendus sed alias error earum, eaque minus quod quisquam velit voluptates
+                similique
+                dicta consequatur vitae in vero illo. Facere omnis veniam, nostrum provident rerum, adipisci non dolor
+                est
+                velit facilis voluptate assumenda iure? Minima totam, voluptatibus quo, fugiat similique nulla
+                laudantium
+                magnam aspernatur accusamus corporis molestias perferendis voluptatum, quis quas commodi sed numquam
+                natus
+                eligendi ad. Asperiores, voluptatibus!
+              </p>
+
+              <a href="#" class="card-link">Learn More.</a>
+            </div>
+          </div>
+        </section>
+
+
+        <!--..............About us section ends here......................-->
+
+        <!-- 
+        - #Services Available
+      -->
+
+        <section class="section featured-services" id="Services">
+          <div class="container">
+
+            <div class="title-wrapper">
+              <h2 class="h2 section-title">Featured Services</h2>
+
+              <a href="/services" class="featured-services-link">
+                <span>View more</span>
+
+                <ion-icon name="arrow-forward-outline"></ion-icon>
+              </a>
+            </div>
+
+            <ul class="featured-services-list">
+
+
+              <!-- Electrician Box-->
+              <li>
+                <div class="featured-services-card">
+                  <figure class="card-banner">
+                    <img src="images/Electrician.jpg" alt="Electrician" loading="lazy" width="440" height="300"
+                      class="w-100">
+                  </figure>
+
+                  <div class="card-content">
+
+                    <div class="card-title-wrapper">
+                      <h3 class="h3 card-title">
+                        <a href="#">Electrician</a>
+                      </h3>
+
+                      <data class="year" value="1">1</data>
+                    </div>
+
+                    <div class="card-price-wrapper">
+
+                      <button class="btn fav-btn" aria-label="Add to favourite list">
+                        <ion-icon name="heart-outline"></ion-icon>
+                      </button>
+
+                      <button class="btn">View Available Electricians </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <!-- Plumber box -->
+              <li>
+                <div class="featured-services-card">
+
+                  <figure class="card-banner">
+                    <img src="images/plumber.jpg" alt="Plumber" loading="lazy" width="440" height="300" class="w-100">
+                  </figure>
+
+                  <div class="card-content">
+
+                    <div class="card-title-wrapper">
+                      <h3 class="h3 card-title">
+                        <a href="#">Plumber</a>
+                      </h3>
+
+                      <data class="year" value="1">1</data>
+                    </div>
+
+                    <div class="card-price-wrapper">
+
+                      <button class="btn fav-btn" aria-label="Add to favourite list">
+                        <ion-icon name="heart-outline"></ion-icon>
+                      </button>
+
+                      <button class="btn">View Available Plumbers </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+
+              <!-- Gardener box -->
+              <li>
+                <div class="featured-services-card">
+
+                  <figure class="card-banner">
+                    <img src="images/gardener.jpg" alt="Gardener" loading="lazy" width="440" height="300" class="w-100">
+                  </figure>
+
+                  <div class="card-content">
+
+                    <div class="card-title-wrapper">
+                      <h3 class="h3 card-title">
+                        <a href="#">Gardener</a>
+                      </h3>
+
+                      <data class="year" value="1">1</data>
+                    </div>
+
+                    <div class="card-price-wrapper">
+
+                      <button class="btn fav-btn" aria-label="Add to favourite list">
+                        <ion-icon name="heart-outline"></ion-icon>
+                      </button>
+
+                      <button class="btn">View Available Gardeners </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+
+            </ul>
+
+          </div>
+        </section>
+
+
+
+        <!-- 
+    - #FOOTER
+  -->
+        <section id="#ContactUs">
+          <%- include ("./components/footer.ejs")%>
+        </section>
+
+        <!-- 
+    - custom js link
+  -->
+        <script src="/javaScript/script.js"></script>
+
+        <!-- 
+    - ionicon link
+  -->
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
