@@ -5,7 +5,7 @@ async function verifyUserAndContinue(req, res, next) {
     const userFound = req.user;
     const verificationResult = await User.findByPk(userFound[0].id);
     if (verificationResult.isVerified === false) {
-      return res.status(400).json({
+      return res.status(414).json({
         message: "You aren't verified please be patient"
       });
     }

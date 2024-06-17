@@ -7,9 +7,12 @@ exports.BookProfessional = async (req, res) => {
   const employeeId = req.params.id;
   const customerId = req.user[0].id;
   const { province, district, city } = req;
-  const { jobDescription, WorkDay, address, wagePerDay } = req.body;
-  
+  const jobDescription = req.body.jobDescription;
+  const WorkDay = req.body.WorkDay;
+  const address = req.body.address;
+  const wagePerDay = req.body.wagePerDay;
   const workDay = `${WorkDay}` + `T00:01:00`
+
 
   const isEmpAvilable = await User.findByPk(employeeId);
   if(isEmpAvilable.role != "Employee") {
@@ -17,7 +20,6 @@ exports.BookProfessional = async (req, res) => {
       message: "Employee not found"
     });
   }
-
   if(isEmpAvilable.isVerified === false){
     return res.status(404).json({
       message: "Employee not verified"
@@ -37,11 +39,13 @@ exports.BookProfessional = async (req, res) => {
       isAccepted : "Pending" || "Accepted"
     },
   }); 
-  if (hasBooked.length > 0) {
-    return res.status(404).json({
+
+  if (hasBooked.length > 0) { 
+    return res.status(444).json({
       message: "Employee already booked",
     });
   }
+
   await Booking.create({
     employeeId,
     customerId,
@@ -54,6 +58,7 @@ exports.BookProfessional = async (req, res) => {
     address,
     wagePerDay,
   });
+
   return res.status(200).json({
     message:
       "Booking created successfully . Waiting for Employee to be accepted",
@@ -84,12 +89,13 @@ exports.cancelBooking = async(req,res)=>{
   const bookingId = req.params.id;
   const customerId = req.user[0].id;
   const booking = await Booking.findByPk(bookingId);
+ 
   if(booking.customerId!= customerId){
     return res.status(404).json({
       message : "You are not authorized to cancel"
     })
   }
-if(booking. isAccepted =="Declined"){
+if(booking.isAccepted =="Declined"){
   return res.status(404).json({
     message : "You have already declined this request"
   })
@@ -115,7 +121,7 @@ exports.viewBookedWorkers = async(req,res)=>{
       customerId,
       isAccepted : "Accepted"
     },
-  attributes: { exclude: ['createdAt','updatedAt','paymentStaus','workStatus','rating','comment','id','employeeId'] }
+  attributes: { exclude: ['createdAt','updatedAt','paymentStaus','workStatus','rating','comment','employeeId'] }
   })
   if(bookings.length ==0){
     return res.status(404).json({
@@ -134,7 +140,7 @@ exports.viewCompletedWorks = async(req,res)=>{
   customerId: userId,
   workStatus : "Completed"
   },
-  attributes: { exclude: ['createdAt','updatedAt','paymentStaus','workStatus','rating','comment','id','customerId'] }})
+  attributes: { exclude: ['createdAt','updatedAt','paymentStaus','workStatus','rating','comment','customerId'] }})
   
   if(booking.length ==0){
     return res.status(404).json({
@@ -175,7 +181,7 @@ exports.rateProfessional = async(req,res)=>{
   }
 
   if(booking.rating != null ){
-    return res.status(400).json({
+    return res.status(405).json({
       message :"you have already rated this job"
     })
   }

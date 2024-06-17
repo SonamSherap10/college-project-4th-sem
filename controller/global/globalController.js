@@ -1,8 +1,9 @@
 const db = require("../../model/index");
-const fs = require("fs")
-const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
+const {promisify} = require("util")
 const User = db.User;
 const UserQualification = db.UserQualifications;
+const Rating = db.Rating;
 
 
 exports.getAll = async (req, res) => {
@@ -105,18 +106,34 @@ exports.viewProfessionals = async (req, res) => {
 };
 
 exports.viewProfessionalsQualifications = async(req,res)=>{
-  const empId = req.params.id
+  var empId = req.params.id
   if(!empId){
     return res.status(400).json({
       message : "Please provide user id"
     })
   }
 
+  if(empId.length > 20){
+    const decoded = await promisify(jwt.verify)(req.params.id,process.env.SECRET_KEY)
+    var empId = decoded.id
+  }
+
+  const empFound = await User.findByPk(empId);
+  if(!empFound){
+    return res.status(404).json({
+      message : "Employee not found"
+    })
+  }
   const userQualifications = await UserQualification.findAll({
     where: { userId: empId },
-    attributes: { exclude: ["id", "createdAt", "updatedAt"] }
+    attributes: { exclude: ["id","createdAt", "updatedAt"] }
   });
-
+   
+  if(userQualifications.length==0){
+    return res.status(404).json({
+      message : "No qualifications found"
+    })
+  }
   const filteredQualifications = userQualifications.map(qualification => {
     const filtered = {};
     for (const key in qualification.dataValues) {
@@ -128,58 +145,28 @@ exports.viewProfessionalsQualifications = async(req,res)=>{
   });
 
   return res.status(200).json({
-    data: filteredQualifications
+    data: filteredQualifications,
+    message : empFound.username
   });
 }
 
+exports.viewRating = async(req,res)=>{
+  var {id} = req.params;
+  
+  if(id.length>30){
+    const decoded = await promisify(jwt.verify)(req.params.id,process.env.SECRET_KEY)
+    var id = decoded.id
+  }
 
-exports.updateProfile = async(req,res)=>{
-const { username, email, Password, phoneNumber, province,district ,city, role, jobTitle, description,Wage} = req.body;
-const {id} = req.params
-const userId = req.user[0].id;
-if(id!= userId) {
-  return res.status(404).json({
-    message : "You do not have permission to do this"
-  })
-}
-const UserFound = await User.findByPk(userId);
-const oldImage = UserFound.profilePicture
-const lengthToCut = process.env.BACKEND_URL.length
-//leko part lai old image bata cut garney so resulting name = 1706087002253-Criminal man.png
-const finalFilePathAfterCut = oldImage.slice(lengthToCut)
-// if file is incoming and the file has a appropriate file name  fs.ulink is used to delete the current image inside uploads folder - 1706087002253-Criminal man.png
-if (req.file && req.file.filename) {
-  fs.unlink("./uploads/" + finalFilePathAfterCut, (err) => {
-    if (err) {
-      console.log("error deleting file", err)
-    } else {
-      console.log("file deleted successfully")
-    }
-  })
-
-   await User.update(
-    {
-      username,
-      password: bcrypt.hashSync(Password, 10),
-      email,
-      phoneNumber,
-      province,
-      district,
-      city,
-      role,
-      jobTitle,
-      description,
-      Wage,
-      profilePicture: (req.file && req.file.filename) ? process.env.BACKEND_URL + req.file.filename : oldImage
-    },
-    {
-      where: { id }
-    }
-  );
-
-  return res.status(200).json({
-    message: "User updated successfully"
-  });
-}
+  const ratingFound = await Rating.findAll({where:{empId:id}})
+  if(ratingFound.length==0){
+    return res.status(404).json({
+      message : "No ratings found"
+    })
+  }
+ return res.status(200).json({
+   data : ratingFound[0]
+ })
 
 }
+

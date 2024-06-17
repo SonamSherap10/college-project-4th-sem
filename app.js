@@ -4,15 +4,15 @@ const cors = require('cors');
 
 const db = require('./model/index')
 
-db.sequelize.sync({force: false}) 
+db.sequelize.sync({force: false})   
 
-require('dotenv').config() 
+require('dotenv').config()  
 const port = process.env.PORT || 9000; 
 
 //adding route files  
 const authRoute = require("./route/authRoute")
-const adminRoute = require("./route/adminRoute") 
-const userRoute = require("./route/userRoute")  
+const adminRoute = require("./route/adminRoute")  
+const userRoute = require("./route/userRoute")   
 const globalRoute = require("./route/globalRoute")
 const paymentRoute = require("./route/paymentRoute")
 
@@ -21,14 +21,14 @@ app.set('views', 'view')
 
 
 app.use(express.json()); 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false}));
 
 app.use(cors({
   origin : "*"
 }))
+  
 
-
-app.use("/auth",authRoute)
+app.use("/auth",authRoute)   
 app.use("/admin",adminRoute)
 app.use("/user",userRoute)
 app.use("/global",globalRoute)

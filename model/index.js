@@ -7,7 +7,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
-    operatorsAliases: "",
+    operatorsAliases: "", 
     logging: false,
     pool: {
         max: dbConfig.pool.max,
@@ -32,7 +32,7 @@ db.Payment = require('./paymentModel')(sequelize, Sequelize);
 sequelize.authenticate()
     .then(() => {
         console.log('Database connection has been established successfully.');
-        adminSeeder(db.User); // Pass the User model to the adminSeeder function
+        adminSeeder(db.User); 
     })
     .catch(error => {
         console.error('Unable to connect to the database:', error);

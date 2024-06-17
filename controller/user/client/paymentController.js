@@ -7,9 +7,8 @@ const Payment = db.Payment;
 
 exports.initializePayment = async (req, res) => {
   const bookingId = req.params.id;
-
   if (!bookingId) 
-    return res.status(404).json({
+    return res.status(404).json({ 
       message: "Please provide booking id"
     });
 
@@ -38,17 +37,17 @@ exports.initializePayment = async (req, res) => {
   });
 
   if (paymentDetails[0].paymentStatus !== "Pending") {
-    return res.status(400).json({
+    return res.status(444).json({
       message: "Payment has already been initiated"
     });
   }
   
   const TotalCharge = paymentDetails[0].totalPayment * 100;
   const data = {
-    return_url: "http://localhost:7878/success",
+    return_url: "http://localhost:5173/success",
     purchase_order_id: bookingId,
     amount: TotalCharge ,
-    website_url: "http://localhost:7878/",
+    website_url: "http://localhost:5173/",
     purchase_order_name: "orderName_" + bookingId
   };
 
@@ -69,8 +68,9 @@ exports.initializePayment = async (req, res) => {
 
 
 
-exports.verifyPayment = async(req,res)=>{
+exports.verifyPayment = async(req,res)=>{ 
   const pidx = req.body.pidx
+  console.log(pidx)
   const response = await axios.post("https://a.khalti.com/api/v2/epayment/lookup/",{pidx},
   {
         headers :{

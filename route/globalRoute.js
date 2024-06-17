@@ -1,7 +1,7 @@
 const isAuthenticated = require('../middleware/authentication');
 const CatchError = require('../services/catchError');
 const extractLocationData = require('../middleware/extractLocation');
-const { viewProfessionals, viewProfessionalsQualifications, updateProfile, getAll } = require('../controller/global/globalController');
+const { viewProfessionals, viewProfessionalsQualifications, getAll, viewRating } = require('../controller/global/globalController');
 const {multer,storage}= require("./../middleware/multerConfig");
 const catchError = require('../services/catchError');
 const upload = multer({
@@ -11,6 +11,6 @@ const router = require('express').Router();
 
 router.get('/viewAll',catchError(getAll))
 router.get('/viewProfessionals/:job',CatchError(viewProfessionals))
-router.get('/viewQualifications/:id',isAuthenticated,CatchError(viewProfessionalsQualifications))
-router.post('/updateProfile/:id',isAuthenticated,upload.single("ProfilePicture"),CatchError(updateProfile))
+router.get('/viewQualifications/:id',CatchError(viewProfessionalsQualifications))
+router.get('/viewRating/:id',CatchError(viewRating))
 module.exports = router

@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
             cb(new Error("This filetype is not supported"))
             return
         }
-        cb(null,'./uploads') // cb(error,success) // cb(euta matra argument)
+        cb(null,'./uploads') 
     },
     filename : function(req,file,cb){
         cb(null,Date.now() + "-" + file.originalname)

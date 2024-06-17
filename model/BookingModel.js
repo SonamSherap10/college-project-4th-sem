@@ -46,7 +46,7 @@ module.exports = (sequelize, Sequelize) => {
     wagePerDay:{
       type: Sequelize.INTEGER,
       validate: {
-        min: 500,
+        min: 100,
         max: 1000
     }
   },

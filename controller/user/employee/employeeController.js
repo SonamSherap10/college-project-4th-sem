@@ -6,44 +6,60 @@ const Payment = db.Payment;
 const schedule = require("node-schedule");
 const fs = require("fs");
 
+
 exports.addQualifications = async (req, res) => {
   const userId = req.user[0].id;
   const qualifications = req.files.map((file) => {
     return process.env.BACKEND_URL + file.filename;
-  });
+  }); 
 
   if (qualifications.length < 1) {
     return res.status(404).json({
       message: "Please upload more qualifications to your name",
     });
   }
-  await UserQualifications.create({
-    userId,
-    image1: qualifications[0] || null,
-    image2: qualifications[1] || null,
-    image3: qualifications[2] || null,
-    image4: qualifications[3] || null,
-    image5: qualifications[4] || null,
-    image6: qualifications[5] || null,
-    image7: qualifications[6] || null,
-    image8: qualifications[7] || null,
-    image9: qualifications[8] || null,
-    image10: qualifications[9] || null,
-    image11: qualifications[10] || null,
-    image12: qualifications[11] || null,
-    image13: qualifications[12] || null,
-    image14: qualifications[13] || null,
-    image15: qualifications[14] || null,
-  });
-  return res.status(200).json({
-    message: "Qualifications uploaded successfully",
-  });
+  
+  const existingUser = await UserQualifications.findOne({ where: { userId } });
+
+  if (existingUser) {
+    const columnsToUpdate = {};
+
+    let j= 0;
+    for (let i = 0; i < 15; i++) {
+      const columnName = `image${i + 1}`;
+      if (existingUser[columnName] === null) {
+        columnsToUpdate[columnName] = qualifications[j];
+        j = j + 1;
+      } 
+    }
+    await UserQualifications.update(columnsToUpdate, { where: { userId } });
+
+    return res.status(200).json({
+      message: "Qualifications uploaded successfully",
+    });
+  } else {
+    // User doesn't exist, create a new record
+    const newUserQualifications = {
+      userId,
+    };
+
+    qualifications.forEach((qualification, index) => {
+      newUserQualifications[`image${index + 1}`] = qualification;
+    });
+
+    await UserQualifications.create(newUserQualifications);
+   
+    return res.status(200).json({
+      message: "Qualifications uploaded successfully",
+    });
+  }
+
+
 };
 
 exports.updateQualification = async (req, res) => {
   const userId = req.user[0].id;
   const {imgName} = req.body;
-
   if (!imgName) {
     return res.status(400).json({ error: "Image name is required" });
   }
@@ -51,6 +67,12 @@ exports.updateQualification = async (req, res) => {
   let userQualifications = await UserQualifications.findAll({
     where: { userId },
   });
+
+  if(userId !== userQualifications[0].userId){
+    return res.status(401).json({
+      message: "You are not authorized to perform this action",
+    });
+  }
 
   if (userQualifications.length == 0) {
     return res.status(404).json({
@@ -72,9 +94,7 @@ exports.updateQualification = async (req, res) => {
         fs.unlink("./uploads/" + finalFilePathAfterCut, (err) => {
           if (err) {
             console.log("error deleting file", err);
-          } else {
-            console.log("file deleted successfully");
-          }
+          } 
         });
         qualification[imgName] = process.env.BACKEND_URL + req.file.filename;
       }}
@@ -154,14 +174,22 @@ exports.viewBookingRequest = async (req, res) => {
 exports.settleBookingRequest = async (req, res) => {
   const { id } = req.params;
   const employeeId = req.user[0].id;
+  const { willAccept } = req.body;
 
   if (!id) {
     return res.status(400).json({
       message: "Please provide booking id",
     });
   }
-  const { willAccept } = req.body;
   const booking = await Booking.findByPk(id);
+
+  if(willAccept =="Decline"){
+      await booking.update({ isAccepted: "Declined" });
+      return res.status(403).json({
+        message: "Booking not accepted",
+      });
+  }
+
   if (!booking) {
     return res.status(404).json({
       message: "Booking not found",
@@ -180,22 +208,14 @@ exports.settleBookingRequest = async (req, res) => {
     });
   }
   const startingDate = booking.workDay;
-  // console.log(startingDate)
-
-  //   // Current time
-  // const currentTime = new Date();
-
-  // // Add 1 minute to the current time
-  // const targetTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
-
-  // console.log(targetTime ,"dajd");
-
   if (willAccept == "Accept") {
     await booking.update({ isAccepted: "Accepted" });
-    async function updateStatus() {
+
+  async function updateStatus() {
       const Employee = await User.findAll({
         where: { id: booking.employeeId },
       });
+      
       Employee[0].bookingStatus = "Booked";
       await Employee[0].save();
 
@@ -209,9 +229,6 @@ exports.settleBookingRequest = async (req, res) => {
       message: "You have been booked successfully",
     });
   }
-  return res.status(404).json({
-    message: "Booking not accepted",
-  });
 };
 
 exports.viewBookedRequests = async (req, res) => {
@@ -229,8 +246,7 @@ exports.viewBookedRequests = async (req, res) => {
         "workStatus",
         "rating",
         "comment",
-        "id",
-        "employeeId",
+        "employeeId"
       ],
     },
   });
@@ -243,6 +259,7 @@ exports.viewBookedRequests = async (req, res) => {
     data: bookings,
   });
 };
+
 
 exports.workCompletion = async (req, res) => {
   const bookingId = req.params.id;
@@ -265,7 +282,7 @@ exports.workCompletion = async (req, res) => {
 
   if (workFound.workStatus != "InProgress") {
     return res.status(404).json({
-      message: "Work is not in progress",
+      data : "Work is not in progress",
     });
   }
 
@@ -286,12 +303,17 @@ exports.workCompletion = async (req, res) => {
   if (status != "Done") {
     (workFound.isAccepted = "Concluded"), (workFound.workStatus = "Dropped");
     await workFound.save();
-    return res.status(200).json({
+    return res.status(202).json({
       message: "Work has been left incomplete",
     });
   }
 
+  // Get current date
+const currentDate = new Date();
+
+
   workFound.isAccepted = "Concluded";
+  workFound.completedIn = currentDate;
   workFound.workStatus = "Completed";
   await workFound.save();
 
@@ -312,9 +334,49 @@ exports.workCompletion = async (req, res) => {
           "Work has been completed. Waiting for the client for verification",
       });
     } else {
-      return res.status(200).json({
+      return res.status(400).json({
         message: "Something went wrong",
       });
     }
   }
 };
+
+
+exports.viewClient = async(req,res)=>{
+  const id = req.params.id;
+  const client = await User.findByPk(id, {
+    attributes: { 
+      exclude: [
+        'password', 
+        'otp',
+        'isOtpVerified',
+        'updatedAt',
+        'jobTitle',
+        'qualifications',
+        'description',
+        'Wage',
+        'bookingStatus',
+        'overallRating',
+        'rating',
+        'completedJobs',
+        'isVerified',
+        'id'
+      ] 
+    }
+  });
+  
+  if(!client){
+    return res.status(404).json({
+      message: "Client not found",
+    });
+  }
+
+  if(client.role != 'Client'){
+    return res.status(400).json({
+      message: "You are not allowed to do this",
+    });
+  }
+  return res.status(200).json({
+    data: client,
+  });
+}

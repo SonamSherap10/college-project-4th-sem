@@ -1,4 +1,4 @@
-const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications, deleteQualification, updateQualification } = require('../controller/user/employee/employeeController');
+const { viewBookingRequest, settleBookingRequest, workCompletion, viewBookedRequests, addQualifications, deleteQualification, updateQualification, viewClient } = require('../controller/user/employee/employeeController');
 const {  BookProfessional, viewCompletedWorks, rateProfessional, viewBookedWorkers, cancelBooking, viewRequests } = require('../controller/user/client/userController');
 const allowTo = require('../middleware/allowTo');
 const isAuthenticated = require('../middleware/authentication');
@@ -7,6 +7,7 @@ const VerifyEmp = require('../middleware/isVerified');
 const router = require('express').Router();
 const CatchError = require('../services/catchError')
 const {multer,storage}= require("./../middleware/multerConfig");
+const catchError = require('../services/catchError');
 const upload = multer({
    storage: storage 
   })
@@ -29,5 +30,6 @@ router.get('/viewBookings',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchEr
 router.get('/viewBookedRequests',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(viewBookedRequests))
 router.post('/settleBooking/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(settleBookingRequest))
 router.post('/requestCompletion/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,CatchError(workCompletion))
+router.get('/viewClient/:id',isAuthenticated,allowTo("Employee"),VerifyEmp,catchError(viewClient))
 
 module.exports = router

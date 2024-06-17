@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
      },
      paymentMethod :{
        type: Sequelize.ENUM("Khalti","COD"),
-       defaultValue : "Khalti"
+       defaultValue : "COD"
      }
   });
 

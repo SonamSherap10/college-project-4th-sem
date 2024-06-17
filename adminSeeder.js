@@ -4,7 +4,6 @@ const adminSeeder = async(User) => {
     try {
         // Check whether admin exists or not
         const isAdminExists = await User.findAll({ where: { email: "admin@gmail.com" } });
-
         if (isAdminExists.length == 0) {
             // Create admin user if it doesn't exist
             await User.create({
@@ -16,7 +15,7 @@ const adminSeeder = async(User) => {
                 jobTitle: "null",
                 province: "null",
                 district: "null",
-                city: "null",
+                city: "null", 
                 isVerified : true
             });
 

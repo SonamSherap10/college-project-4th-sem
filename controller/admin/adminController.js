@@ -41,9 +41,9 @@ exports.verifyEmployee = async (req,res)=>{
     });
   }
 
-const verified = req.body.verification
-if (verified === true){
-  employee.isVerified = verified
+const verified = req.body.value
+if (verified === "ok"){
+  employee.isVerified = 1
   employee.save()
 
   await Rating.create({
@@ -59,7 +59,7 @@ if (verified === true){
 }
  
 await User.destroy({where :{id:id}})
-return res.status(200).json({
+return res.status(201).json({
   message : "Employee has been deleted due to unverification"
 }) 
 }
